@@ -2,6 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 
+const bcrypt = require('bcryptjs');
+
+// user model
+const User = require('../models/User');
+
 //Login Page
 router.get('/login', (req, res) => res.render('login'));
 
@@ -34,13 +39,13 @@ router.post('/register', (req, res) => {
     }
 
     //Check if passwords is 6 characters long
-    if (password.legnth < 6) {
+    if (password.length < 6) {
         errors.push({
-            msg: 'Password is too short. Should be at least 6 characters long!'
+            msg: 'Password should be at least 6 characters'
         });
     }
 
-    if (errors.legnth > 0) {
+    if (errors.length > 0) {
         res.render('register', {
             errors,
             name,
@@ -49,7 +54,48 @@ router.post('/register', (req, res) => {
             password2
         });
     } else {
-        res.send('pass!');
+        //validation pass
+        User.findOne({
+                email: email
+            })
+            .then(user => {
+                if (user) {
+                    //user exists
+                    errors.push({
+                        msg: 'Email is already registerd'
+                    });
+                    res.render('register', {
+                        errors,
+                        name,
+                        email,
+                        password,
+                        password2
+                    });
+                } else {
+                    //making a new user
+                    const newUser = new User({
+                        name,
+                        email,
+                        password
+                    });
+
+                    //Hash Password
+                    bcrypt.genSalt(10, (err, salt) => bcrypt.hash(newUser.password, salt, (err, hash) => {
+                        if (err) throw err;
+                        //Set password to hashed
+                        newUser.password = hash;
+                        //save user
+                        newUser.save()
+                            .then(user => {
+                                res.redirect('/users/login');
+                            })
+                            .catch(err => console.log(err));
+
+
+                    }))
+
+                }
+            });
     }
 
 

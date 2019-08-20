@@ -1,8 +1,10 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
-
 const app = express();
+const flash = require('connect-flash');
+const sessinon = require('express-session');
+
 
 //DB Config
 const db = require('./config/keys').MongoURI;
@@ -22,6 +24,8 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({
     extended: false
 }));
+
+//Express session
 
 //Routes
 app.use('/', require('./routes/index'));
