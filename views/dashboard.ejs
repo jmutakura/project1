@@ -1,3 +1,127 @@
-<h1 class="mt-4">Dashboard</h1>
-<p class="lead mb-3">Welcome <%= user.name %></p>
-<a href="/users/logout" class="btn btn-secondary">Logout</a>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>dashboard</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+        #map {
+            height: 32rem;
+            width: 100%;
+        }
+
+        body {
+            background-color: #fafafa;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h1 class="mt-4">Dashboard</h1>
+    <p class="lead mb-3">Welcome <%= name %></p>
+
+
+    <h1>My Portfolio</h1>
+    <div id="map"></div>
+
+    <%#Script for the map %>
+    <script>
+        var a = 5;
+        var b = 10;
+
+        function initMap() {
+            // Map options
+            var options = {
+                zoom: 12,
+                center: {
+                    lat: 52.1332,
+                    lng: -106.6700
+                }
+            }
+            // New map
+            var map = new google.maps.Map(document.getElementById('map'), options);
+            // Array of markers
+            var markers = [
+                //MONTREAL SITES
+                {
+                    coords: {
+                        lat: 45.4657,
+                        lng: -73.7455
+                    },
+                    content: '<span><h1>The Starting Point</h1>  <h3>This will be the starting point of the race. Players are to nevigate from this location to "The Fur Trade at Lachine National Historic Site/Museum" to get their next clue. </h3> </span>'
+                },
+                {
+                    coords: {
+                        lat: 45.5017,
+                        lng: -73.5673
+                    },
+                    content: '<h1>The Fur trade At Lachine </h1> <h3>Players will have to take participation in an event that showcases how fur trade took place in the olden days. The Sucessful team would now be able to get a clue to their next destination which will be the finish line of this leg of the race.</h3>'
+                },
+                {
+                    coords: {
+                        lat: 45.4310,
+                        lng: -73.6704
+                    },
+                    content: '<h1>DETOUR: Sail Or Sink</h1>  <h2>SAIL</h2> <h3>In this part of the detour, one player will have to sail using a model boat around the river and do so only using the equipment and materials that were used in the old days and do so successfully in order to get the nex clue.</h3> <h2>SINK</h2> <h3>In this par of the detour, one player will have to dive udewater and find the next clue in a designated area.</h3> '
+                },
+                //QUEBEC CITY SITES
+                {
+                    coords: {
+                        lat: 46.8078,
+                        lng: -71.2069
+                    },
+                    iconImage: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+                    content: '<span><h1>The Finish line for this leg of the race</h1></span>  <h3>La ciadel will be the finsh line for this leg of the race</h3>'
+                },
+            ];
+            // Loop through markers
+            for (var i = 0; i < markers.length; i++) {
+                // Add marker
+                addMarker(markers[i]);
+            }
+            // Add Marker Function
+            function addMarker(props) {
+                var marker = new google.maps.Marker({
+                    position: props.coords,
+                    map: map,
+                    //icon:props.iconImage
+                });
+                // Check for customicon
+                if (props.iconImage) {
+                    // Set icon image
+                    marker.setIcon(props.iconImage);
+                }
+                // Check content
+                if (props.content) {
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: props.content
+                    });
+                    marker.addListener('click', function () {
+                        infoWindow.open(map, marker);
+                    });
+                }
+            }
+        }
+    </script>
+
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAx9kvb15PnXALx3GmFCIARcpAqkOfeeI8&callback=initMap">
+    </script>
+
+
+
+
+
+
+
+    <br>
+    <a href="/users/logout" class="btn btn-secondary">Logout</a>
+</body>
+
+</html>
